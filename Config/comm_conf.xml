@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PARA>
+    <SRC ip="127.0.0.1" port="7001" desc="本地地址"/>
+    <CORE var="3" desc="接收数据绑定核心"/>
+    <PATH var="./data" desc="存储路径"/>
+</PARA>

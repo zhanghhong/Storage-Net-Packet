@@ -1,0 +1,16 @@
+/.qtc_clangd/
+/data*/
+/exe/
+/lib/
+/debug/
+/release/
+/*bak/
+/*/Makefile*
+*.bat
+*.Debug
+*.Release
+*.pro
+*.user
+*/obj/
+*/*bak/
+user*
