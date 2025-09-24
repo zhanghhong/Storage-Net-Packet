@@ -119,16 +119,16 @@ bool UdpReceiver::getNextPacketDirect(const uint8_t** data_ptr, uint32_t* length
         size_t read_idx = m_read_index.load();
         
         // 检查是否有数据可读
-        if (read_idx == m_write_index.load() || !m_buffer[read_idx].valid) {
+        if (read_idx == m_write_index.load() || !m_buffer[read_idx].info.valid) {
             return false;
         }
         
         // 直接返回缓冲区数据指针，避免拷贝
         *data_ptr = (const uint8_t*)m_buffer[read_idx].data.data();
-        *length = m_buffer[read_idx].length;
+        *length = m_buffer[read_idx].info.length;
         *header = m_buffer[read_idx].info;
         
-        m_buffer[read_idx].valid = false;
+        m_buffer[read_idx].info.valid = false;
         
         // 更新读索引
         m_read_index.store((read_idx + 1) % m_buffer_size);
@@ -158,7 +158,7 @@ void UdpReceiver::clearBuffer()
     m_read_index.store(0);
     
     for (auto& node : m_buffer) {
-        node.valid = false;
+        node.info.valid = false;
     }
 }
 
@@ -359,10 +359,13 @@ bool UdpReceiver::writeToBuffer(const uint8_t* data, uint32_t length)
     
     // 写入数据
     m_buffer[write_idx].data.assign((char*)data, length);
-    m_buffer[write_idx].length = length;
+    m_buffer[write_idx].info.length = length;
 
-    m_buffer[write_idx].valid = true;
+    m_buffer[write_idx].info.valid = true;
     m_buffer[write_idx].info.RecvTime = OSE_TIME_SYS::GetOriginUTCTime();
+
+    static uint64_t count = 0;
+    m_buffer[write_idx].info.count = count++;
     
     // 更新写索引
     m_write_index.store(next_write_idx);

@@ -13,6 +13,14 @@ struct udp_packet_info
     double SrcAddr;
     // 报文发送端端口
     unsigned short SrcPort;
+    // 有效标志
+    bool valid;
+    // 备用
+    bool bak;
+    // 报文长度
+    uint32_t length;
+    // 测试序号
+    uint64_t count;
 };
 #pragma pack(pop)
 
@@ -22,10 +30,6 @@ struct udp_packet_t
 {
     // 报文数据部分
     std::string data;
-    // 有效标志
-    bool valid;
-    // 报文长度
-    uint32_t length;
     // 包信息
     udp_packet_info info;
 };
